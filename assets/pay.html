@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>扫码支付模式二</title>
+</head>
+<style>
+    .go_center{
+        position: absolute;
+        left:50%;
+        top:50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+<script src="qrcodejs/jquery.min.js"></script>
+<script src="qrcodejs/qrcode.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("button").click(function(){
+            $.ajax({
+                //提交数据的类型 POST GET
+                type:"POST",
+                //提交的网址
+                url:"/wechat/pay/unifiedorder",
+                //提交的数据   该参数为属性值类型的参数
+                data:{param1:"1",param2:"2"},
+                //返回数据的格式
+                datatype: "json", //"xml", "html", "script", "json", "jsonp", "text".
+                //在请求之前调用的函数
+
+                //成功返回之后调用的函数
+                success:function(data){
+
+                    console.log(data.data)
+                    new QRCode(document.getElementById("qrcode"), decodeURI(data.data["code_url"]));
+
+                }   ,
+                //调用执行后调用的函数
+                complete: function(XMLHttpRequest, textStatus){
+
+                },
+                //调用出错执行的函数
+                error: function(){
+                    //请求出错处理
+                }
+            });
+        });
+
+
+
+    });
+</script>
+<body>
+<div class="go_center">
+
+    <div id="qrcode"></div>
+    <button>去支付</button>
+</div>
+
+
+</body>
+</html>
