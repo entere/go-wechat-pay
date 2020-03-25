@@ -39,7 +39,7 @@ func UninfedOrder(c *gin.Context) {
 	params["spbill_create_ip"] = "192.168.0.1"
 	params["notify_url"] = "http://6825eec0.ngrok.io/wechat/pay/notify"
 	params["trade_type"] = "NATIVE"
-	pay := pay.NewPay(core.NewClient(core.WX_APP_ID, core.WX_MCH_ID, core.WX_API_KEY_SANBOX, core.MD5))
+	pay := pay.NewPay(core.NewClient(core.WX_APP_ID, core.WX_MCH_ID, GetApiKey(), core.MD5))
 	resp, err := pay.UnifiedOrder(params)
 	if err != nil {
 		log.Fatalf("pay unifiedorder err:%v", err)
