@@ -41,4 +41,8 @@ const (
 	SandboxAuthCodeToOpenidUrl = "https://api.mch.weixin.qq.com/sandboxnew/tools/authcodetoopenid"
 
 	SandboxGetSignKeyUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
+
+
+	AckSuccess = `<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>`
+	AckFail    = `<xml><return_code><![CDATA[FAIL]]></return_code></xml>`
 )

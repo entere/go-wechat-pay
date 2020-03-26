@@ -17,6 +17,7 @@
 <script>
     $(document).ready(function(){
         $("button").click(function(){
+            checkOrder();
             $.ajax({
                 //提交数据的类型 POST GET
                 type:"POST",
@@ -49,6 +50,33 @@
 
 
     });
+
+    function checkOrder() {
+        $.ajax({
+            type: 'POST',
+            url: '/go-wechat-pay/wechat/pay/orderquery',
+            dataType: 'json',
+
+            timeout:5000,
+
+            success: function(res) {
+                console.log(res);
+                if (res.data.trade_state == "SUCCESS") {
+                    $("#qrcode").html("支付完成");
+                } else {
+                    console.log(res.data);
+                }
+            },
+
+            error: function(xmlHttpRequest,textStatus,error) {
+                if (textStatus == "timeout") {
+                    checkOrder();
+                }
+                console.log(error);
+            }
+        });
+    }
+
 </script>
 <body>
 <div class="go_center">

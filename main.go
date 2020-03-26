@@ -26,6 +26,7 @@ func main() {
 	//微信支付回调方法
 	r.POST("/wechat/pay/unifiedorder", handler.UninfedOrder)
 	r.POST("/wechat/pay/notify", handler.Notify)
+	r.POST("/wechat/pay/orderquery", handler.OrderQuery)
 
 	r.Run(":8003") // 监听并在 0.0.0.0:8080 上启动服务
 }
