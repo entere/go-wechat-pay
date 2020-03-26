@@ -18,6 +18,13 @@ import (
 	"github.com/entere/go-wechat-pay/mch/core"
 )
 
+var (
+	testAppID     = "xx"
+	testAppSecret = "xx"
+	testMchID     = "xx"
+	testApiKey    = "xx" // sanbox api key 需能过接口获取
+)
+
 func TestPay_UnifiedOrder(t *testing.T) {
 
 	params := make(map[string]string)
@@ -25,9 +32,9 @@ func TestPay_UnifiedOrder(t *testing.T) {
 	params["out_trade_no"] = wxutils.TimeToString(time.Now())
 	params["total_fee"] = strconv.FormatInt(301, 10)
 	params["spbill_create_ip"] = "192.168.0.1"
-	params["notify_url"] = "/wechat/pay/notify"
+	params["notify_url"] = "http://localhost:8003/wechat/pay/notify"
 	params["trade_type"] = "NATIVE"
-	pay := NewPay(core.NewClient(core.WX_APP_ID, core.WX_MCH_ID, core.WX_API_KEY_SANBOX, core.MD5))
+	pay := NewPay(core.NewClient(testAppID, testMchID, testApiKey, core.MD5), true)
 	resp, err := pay.UnifiedOrder(params)
 	if err != nil {
 		t.Fatalf("pay unifiedorder err:%v", err)
@@ -37,7 +44,7 @@ func TestPay_UnifiedOrder(t *testing.T) {
 }
 
 func TestPay_OrderQuery(t *testing.T) {
-	pay := NewPay(core.NewClient(core.WX_APP_ID, core.WX_MCH_ID, core.WX_API_KEY_SANBOX, core.MD5))
+	pay := NewPay(core.NewClient(testAppID, testMchID, testApiKey, core.MD5), true)
 	params := make(map[string]string)
 	params["out_trade_no"] = "202008089877"
 	params["nonce_str"] = wxutils.NonceStr(8)

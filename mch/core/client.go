@@ -30,7 +30,7 @@ type Client struct {
 	signType string
 }
 
-func NewClient(appID, mchID, apiKey string, signType string) *Client {
+func NewClient(appID, mchID, apiKey, signType string) *Client {
 
 	return &Client{
 		appID:    appID,

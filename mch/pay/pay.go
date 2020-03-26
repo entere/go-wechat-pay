@@ -15,19 +15,21 @@ import (
 )
 
 type Pay struct {
-	cli *core.Client
+	cli       *core.Client
+	isSandbox bool
 }
 
-func NewPay(cli *core.Client) *Pay {
+func NewPay(cli *core.Client, isSandbox bool) *Pay {
 	return &Pay{
-		cli: cli,
+		cli:       cli,
+		isSandbox: isSandbox,
 	}
 }
 
 // 统一下单
 func (p *Pay) UnifiedOrder(params map[string]string) (map[string]string, error) {
 	var url string
-	if core.IsSandbox {
+	if p.isSandbox {
 		url = core.SandboxUnifiedOrderUrl
 	} else {
 		url = core.UnifiedOrderUrl
@@ -42,7 +44,7 @@ func (p *Pay) UnifiedOrder(params map[string]string) (map[string]string, error) 
 // 订单查询
 func (p *Pay) OrderQuery(params map[string]string) (map[string]string, error) {
 	var url string
-	if core.IsSandbox {
+	if p.isSandbox {
 		url = core.SandboxOrderQueryUrl
 	} else {
 		url = core.OrderQueryUrl

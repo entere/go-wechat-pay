@@ -8,15 +8,6 @@
 
 package core
 
-var IsSandbox = true
-
-const (
-	WX_APP_ID         = "xx" //测试app_id
-	WX_APP_SECRET     = "xx" //测试app_secret
-	WX_MCH_ID         = "xx" //测试商户号，在商户后台设置
-	WX_API_KEY        = "xx" //测试api密钥，在商户后台设置
-	WX_API_KEY_SANBOX = "xx" // 沙箱API_KEY
-)
 const (
 	Fail       = "FAIL"
 	Success    = "SUCCESS"
