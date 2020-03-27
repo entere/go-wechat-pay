@@ -10,13 +10,12 @@ package handler
 
 import (
 	"fmt"
+	"github.com/entere/go-wechat-pay/mch/wxutils"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
-
-	"github.com/entere/go-wechat-pay/mch/wxutils"
 
 	"github.com/entere/go-wechat-pay/mch/core"
 	"github.com/entere/go-wechat-pay/mch/pay"
@@ -26,11 +25,12 @@ import (
 
 var (
 	payment *pay.Pay
-	outTradeNo = wxutils.TimeToString(time.Now())
+	outTradeNo string
 )
 func init() {
 	Init()
-	payment = pay.NewPay(core.NewClient(appID, mchID, apiKey, core.MD5), isSandbox)
+	payment = pay.NewPay(core.NewCore(appID, mchID, apiKey, core.MD5), isSandbox)
+	outTradeNo =  wxutils.TimeToString(time.Now())
 }
 
 

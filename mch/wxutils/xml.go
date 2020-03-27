@@ -16,7 +16,7 @@ import (
 )
 
 //把xml字符转成map[string]string
-func XMLToMap(xmlStr string) (m map[string]string, err error) {
+func XML2Map(xmlStr string) (m map[string]string, err error) {
 	m = make(map[string]string)
 	var (
 		decoder = xml.NewDecoder(strings.NewReader(xmlStr))
@@ -61,7 +61,7 @@ func XMLToMap(xmlStr string) (m map[string]string, err error) {
 	}
 }
 
-func MapToXML(m map[string]string) (xmlStr string) {
+func Map2XML(m map[string]string) (xmlStr string) {
 	var buf bytes.Buffer
 	buf.WriteString(`<xml>`)
 	for k, v := range m {

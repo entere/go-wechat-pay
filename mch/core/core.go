@@ -1,7 +1,7 @@
 /**
  * @Author: entere
  * @Description:
- * @File:  client
+ * @File:  Core
  * @Version: 1.0.0
  * @Date: 2020/3/23 22:30
  */
@@ -23,16 +23,16 @@ import (
 	"github.com/entere/go-wechat-pay/mch/wxutils"
 )
 
-type Client struct {
+type Core struct {
 	appID    string
 	mchID    string
 	apiKey   string
 	signType string
 }
 
-func NewClient(appID, mchID, apiKey, signType string) *Client {
+func NewCore(appID, mchID, apiKey, signType string) *Core {
 
-	return &Client{
+	return &Core{
 		appID:    appID,
 		mchID:    mchID,
 		apiKey:   apiKey,
@@ -43,7 +43,7 @@ func NewClient(appID, mchID, apiKey, signType string) *Client {
 // 获取沙箱验证签名的密钥key，沙箱环境用此密钥，正式环境还是用商户后台的api_key，
 // map["mchID"]
 // map["apiKey"]
-func (c *Client) GetSandboxSignKey() (map[string]string, error) {
+func (c *Core) GetSandboxSignKey() (map[string]string, error) {
 	params := make(map[string]string)
 	params["mch_id"] = c.mchID
 	params["api_key"] = c.apiKey
@@ -58,7 +58,7 @@ func (c *Client) GetSandboxSignKey() (map[string]string, error) {
 }
 
 // 微信支付签名，微信文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_3
-func (c *Client) Sign(params map[string]string) string {
+func (c *Core) Sign(params map[string]string) string {
 	// 创建切片
 	var keys = make([]string, 0, len(params))
 	// 遍历签名参数
@@ -106,17 +106,17 @@ func (c *Client) Sign(params map[string]string) string {
 }
 
 // 生成带有签名的xml字符串
-func (c *Client) GenerateSignedXml(params map[string]string) string {
+func (c *Core) GenerateSignedXml(params map[string]string) string {
 	sign := c.Sign(params)
 	params[Sign] = sign
-	return wxutils.MapToXML(params)
+	return wxutils.Map2XML(params)
 }
 
 // post请求，without cert
-func (c *Client) PostWithoutCert(url string, params map[string]string) (string, error) {
+func (c *Core) PostWithoutCert(url string, params map[string]string) (string, error) {
 	h := &http.Client{}
 	p := c.fillRequestData(params)
-	response, err := h.Post(url, "application/xml; charset=utf-8", strings.NewReader(wxutils.MapToXML(p)))
+	response, err := h.Post(url, "application/xml; charset=utf-8", strings.NewReader(wxutils.Map2XML(p)))
 	if err != nil {
 		return "", err
 	}
@@ -129,7 +129,7 @@ func (c *Client) PostWithoutCert(url string, params map[string]string) (string, 
 }
 
 // 验证签名
-func (c *Client) ValidSign(params map[string]string) bool {
+func (c *Core) ValidSign(params map[string]string) bool {
 	if _, ok := params[Sign]; !ok {
 		return false
 	}
@@ -137,7 +137,7 @@ func (c *Client) ValidSign(params map[string]string) bool {
 }
 
 // 向 params 中添加 appid、mch_id、nonce_str、sign_type、sign
-func (c *Client) fillRequestData(params map[string]string) map[string]string {
+func (c *Core) fillRequestData(params map[string]string) map[string]string {
 	params["appid"] = c.appID
 	params["mch_id"] = c.mchID
 	params["nonce_str"] = wxutils.NonceStr(8)
@@ -147,9 +147,9 @@ func (c *Client) fillRequestData(params map[string]string) map[string]string {
 }
 
 // 处理 HTTPS API返回数据，转换成Map对象。return_code为SUCCESS时，验证签名。
-func (c *Client) ProcessResponseXml(xmlStr string) (map[string]string, error) {
+func (c *Core) ProcessResponseXml(xmlStr string) (map[string]string, error) {
 	var returnCode string
-	params, err := wxutils.XMLToMap(xmlStr)
+	params, err := wxutils.XML2Map(xmlStr)
 	if err != nil {
 		return nil, err
 

@@ -15,11 +15,11 @@ import (
 )
 
 type Pay struct {
-	cli       *core.Client
+	cli       *core.Core
 	isSandbox bool
 }
 
-func NewPay(cli *core.Client, isSandbox bool) *Pay {
+func NewPay(cli *core.Core, isSandbox bool) *Pay {
 	return &Pay{
 		cli:       cli,
 		isSandbox: isSandbox,

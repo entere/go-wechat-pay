@@ -34,7 +34,7 @@ func TestPay_UnifiedOrder(t *testing.T) {
 	params["spbill_create_ip"] = "192.168.0.1"
 	params["notify_url"] = "http://localhost:8003/wechat/pay/notify"
 	params["trade_type"] = "NATIVE"
-	pay := NewPay(core.NewClient(testAppID, testMchID, testApiKey, core.MD5), true)
+	pay := NewPay(core.NewCore(testAppID, testMchID, testApiKey, core.MD5), true)
 	resp, err := pay.UnifiedOrder(params)
 	if err != nil {
 		t.Fatalf("pay unifiedorder err:%v", err)
@@ -44,7 +44,7 @@ func TestPay_UnifiedOrder(t *testing.T) {
 }
 
 func TestPay_OrderQuery(t *testing.T) {
-	pay := NewPay(core.NewClient(testAppID, testMchID, testApiKey, core.MD5), true)
+	pay := NewPay(core.NewCore(testAppID, testMchID, testApiKey, core.MD5), true)
 	params := make(map[string]string)
 	params["out_trade_no"] = "202008089877"
 	params["nonce_str"] = wxutils.NonceStr(8)
