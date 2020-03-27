@@ -31,6 +31,8 @@ func init() {
 	Init()
 	payment = pay.NewPay(core.NewCore(appID, mchID, apiKey, core.MD5), isSandbox)
 	outTradeNo =  wxutils.TimeToString(time.Now())
+
+
 }
 
 
@@ -42,7 +44,7 @@ func UninfedOrder(c *gin.Context) {
 	//if err != nil {
 	//	fmt.Printf("get sand box sign key err:%v\n", err)
 	//}
-
+	log.Printf("unified order out trade no :%v\n", outTradeNo)
 
 	params := make(map[string]string)
 	params["body"] = "test"
@@ -70,6 +72,7 @@ func UninfedOrder(c *gin.Context) {
 
 // 查询订单
 func OrderQuery(c *gin.Context) {
+	log.Printf("order query out trade no :%v\n", outTradeNo)
 	params := make(map[string]string)
 
 	params["out_trade_no"] = outTradeNo
