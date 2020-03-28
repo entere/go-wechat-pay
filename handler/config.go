@@ -4,39 +4,41 @@
  * @File:  handler
  * @Version: 1.0.0
  * @Date: 2020/3/25 22:04
+ *
  */
 
 package handler
 
-var isSandbox = false
+var WXIsSandbox = true
 
 var (
-	appID     string
-	appSecret string
-	mchID     string
-	apiKey    string
-	totalFree int64
-	notifyUrl string
+	WXAppID     string
+	WXAppSecret string
+	WXMchID     string
+	WXApiKey    string
+	WXTotalFree int64
+	WXNotifyUrl string
 )
 
 
 func Init() {
 
+	WXAppID     = "xx"
+	WXAppSecret = "xx"
+	WXMchID     = "xx"
+	WXApiKey    = "xx"
+
+
+
+
 	//todo 不用沙箱  换成配置文件
-	if !isSandbox {
-		appID     = "x"
-		appSecret = "x"
-		mchID     = "x"
-		apiKey    = "x"
-		totalFree = 1
-		notifyUrl = "x"
+	if !WXIsSandbox {
+		WXTotalFree = 1
+		WXNotifyUrl = "http://api.raccooncode.com/go-wechat-pay/wechat/pay/notify"
 	} else {
-		appID     = "x"
-		appSecret = "x"
-		mchID     = "x"
-		apiKey    = "x"
-		totalFree = 301
-		notifyUrl = "x"
+		WXApiKey    = GetSandboxApiKey(WXAppID,WXMchID,WXApiKey)
+		WXTotalFree = 301
+		WXNotifyUrl = "http://6daf869b.ngrok.io/wechat/pay/notify"
 	}
 
 

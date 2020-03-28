@@ -38,7 +38,7 @@ func (p *Pay) UnifiedOrder(params map[string]string) (map[string]string, error) 
 	if err != nil {
 		return nil, err
 	}
-	return p.cli.ProcessResponseXml(xmlStr)
+	return p.cli.ProcessResponseXML(xmlStr)
 }
 
 // 订单查询
@@ -53,12 +53,12 @@ func (p *Pay) OrderQuery(params map[string]string) (map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	return p.cli.ProcessResponseXml(xmlStr)
+	return p.cli.ProcessResponseXML(xmlStr)
 }
 
 //支付回调接收通知接口
 func (p *Pay) Notify(xmlStr string) (map[string]string, error) {
-	resp, err := p.cli.ProcessResponseXml(xmlStr)
+	resp, err := p.cli.ProcessResponseXML(xmlStr)
 
 	log.Printf("reveive notify:%+v", resp)
 	if err != nil {

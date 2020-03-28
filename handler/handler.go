@@ -25,12 +25,12 @@ import (
 
 var (
 	payment *pay.Pay
-	outTradeNo string
+
 )
 func init() {
 	Init()
-	payment = pay.NewPay(core.NewCore(appID, mchID, apiKey, core.MD5), isSandbox)
-	outTradeNo =  wxutils.TimeToString(time.Now())
+	payment = pay.NewPay(core.NewCore(WXAppID, WXMchID, WXApiKey, core.MD5), WXIsSandbox)
+
 
 
 }
@@ -44,17 +44,19 @@ func UninfedOrder(c *gin.Context) {
 	//if err != nil {
 	//	fmt.Printf("get sand box sign key err:%v\n", err)
 	//}
+	outTradeNo :=  wxutils.TimeToString(time.Now())
 	log.Printf("unified order out trade no :%v\n", outTradeNo)
 
 	params := make(map[string]string)
 	params["body"] = "test"
 	params["out_trade_no"] = outTradeNo
-	params["total_fee"] = strconv.FormatInt(int64(totalFree), 10)
+	params["total_fee"] = strconv.FormatInt(int64(WXTotalFree), 10)
 	params["spbill_create_ip"] = "192.168.0.1"
-	params["notify_url"] = notifyUrl
+	params["notify_url"] = WXNotifyUrl
 	params["trade_type"] = "NATIVE"
 
 	resp, err := payment.UnifiedOrder(params)
+	resp["out_trade_no"] = outTradeNo
 	if err != nil {
 		log.Fatalf("pay unifiedorder err:%v", err)
 
@@ -72,6 +74,7 @@ func UninfedOrder(c *gin.Context) {
 
 // 查询订单
 func OrderQuery(c *gin.Context) {
+	outTradeNo:= c.PostForm("outTradeNo")
 	log.Printf("order query out trade no :%v\n", outTradeNo)
 	params := make(map[string]string)
 
