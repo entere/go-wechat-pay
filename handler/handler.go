@@ -196,3 +196,22 @@ func Redirect(c *gin.Context) {
 	http.Redirect(c.Writer, c.Request, wxURL, http.StatusFound)
 
 }
+
+func Tt(c *gin.Context) {
+
+	h := &http.Client{}
+	response, err := h.Get("http://pay.raccooncode.com/wechat-pay/wechat/pay/redirect")
+	if err != nil {
+
+	}
+	defer response.Body.Close()
+	res, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "Success",
+		"data": string(res),
+	})
+}
