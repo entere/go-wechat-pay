@@ -85,7 +85,7 @@ func UninfedOrderJSAPI(c *gin.Context) {
 	params["total_fee"] = strconv.FormatInt(int64(WXTotalFree), 10)
 	params["spbill_create_ip"] = "192.168.0.1"
 	params["notify_url"] = WXNotifyUrl
-	params["trade_type"] = "NATIVE"
+	params["trade_type"] = "JSAPI"
 
 	resp, err := payment.UnifiedOrder(params)
 	resp["out_trade_no"] = outTradeNo
