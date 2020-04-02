@@ -25,26 +25,58 @@ import (
 
 var (
 	payment *pay.Pay
-
 )
+
 func init() {
 	Init()
 	payment = pay.NewPay(core.NewCore(WXAppID, WXMchID, WXApiKey, core.MD5), WXIsSandbox)
 
-
-
 }
 
-
 // 下单 获取支付二维码
-func UninfedOrder(c *gin.Context) {
+func UninfedOrderNative(c *gin.Context) {
 
 	//// 获取沙箱api_key
 	//sandboxApiKey, err := payment.GetSandboxSignKey(payment.WX_MCH_ID, payment.WX_API_KEY)
 	//if err != nil {
 	//	fmt.Printf("get sand box sign key err:%v\n", err)
 	//}
-	outTradeNo :=  wxutils.TimeToString(time.Now())
+	outTradeNo := wxutils.TimeToString(time.Now())
+	log.Printf("unified order out trade no :%v\n", outTradeNo)
+
+	params := make(map[string]string)
+	params["body"] = "test"
+	params["out_trade_no"] = outTradeNo
+	params["total_fee"] = strconv.FormatInt(int64(WXTotalFree), 10)
+	params["spbill_create_ip"] = "192.168.0.1"
+	params["notify_url"] = WXNotifyUrl
+	params["trade_type"] = "NATIVE"
+
+	resp, err := payment.UnifiedOrder(params)
+
+	if err != nil {
+		log.Fatalf("pay unifiedorder err:%v", err)
+	}
+
+	log.Printf("unified order result :%v\n", resp)
+	resp["out_trade_no"] = outTradeNo
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "Success",
+		"data": resp,
+	})
+
+}
+
+// JsAPI统一下单接口
+func UninfedOrderJSAPI(c *gin.Context) {
+
+	//// 获取沙箱api_key
+	//sandboxApiKey, err := payment.GetSandboxSignKey(payment.WX_MCH_ID, payment.WX_API_KEY)
+	//if err != nil {
+	//	fmt.Printf("get sand box sign key err:%v\n", err)
+	//}
+	outTradeNo := wxutils.TimeToString(time.Now())
 	log.Printf("unified order out trade no :%v\n", outTradeNo)
 
 	params := make(map[string]string)
@@ -59,22 +91,29 @@ func UninfedOrder(c *gin.Context) {
 	resp["out_trade_no"] = outTradeNo
 	if err != nil {
 		log.Fatalf("pay unifiedorder err:%v", err)
-
 	}
 	log.Printf("unified order result :%v\n", resp)
+
+	jsParams := make(map[string]string)
+	jsParams["appId"] = WXAppID
+	jsParams["timeStamp"] = wxutils.TimeToString(time.Now())
+	jsParams["nonceStr"] = wxutils.NonceStr(10)
+	jsParams["package"] = "prepay_id=" + resp["prepay_id"]
+	jsParams["signType"] = core.MD5
+	paySign := wxutils.Sign(jsParams, WXApiKey, jsParams["signType"])
+	jsParams["paySign"] = paySign
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
 		"msg":  "Success",
-		"data": resp,
+		"data": jsParams,
 	})
 
 }
 
-
 // 查询订单
 func OrderQuery(c *gin.Context) {
-	outTradeNo:= c.PostForm("outTradeNo")
+	outTradeNo := c.PostForm("outTradeNo")
 	log.Printf("order query out trade no :%v\n", outTradeNo)
 	params := make(map[string]string)
 
@@ -95,9 +134,8 @@ func OrderQuery(c *gin.Context) {
 
 }
 
-
-//支付通知
-func Notify(c *gin.Context) {
+//Native支付回调通知
+func NotifyNative(c *gin.Context) {
 
 	xmlByte, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {

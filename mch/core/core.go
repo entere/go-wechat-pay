@@ -9,15 +9,9 @@
 package core
 
 import (
-	"bytes"
-	"crypto/hmac"
-	"crypto/md5"
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"io/ioutil"
 	"net/http"
-	"sort"
 	"strings"
 
 	"github.com/entere/go-wechat-pay/mch/wxutils"
@@ -33,66 +27,67 @@ type Core struct {
 func NewCore(appID, mchID, apiKey, signType string) *Core {
 
 	return &Core{
-		appID:    appID,
-		mchID:    mchID,
-		apiKey:   apiKey,
-		signType: signType,
+		appID:    appID,    //开发者ID
+		mchID:    mchID,    //商户号
+		apiKey:   apiKey,   //api密钥
+		signType: signType, //签名类型：MD5或HMAC-SHA256
 	}
 }
 
-
-
-// 微信支付签名，微信文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_3
-func (c *Core) Sign(params map[string]string) string {
-	// 创建切片
-	var keys = make([]string, 0, len(params))
-	// 遍历签名参数
-	for k := range params {
-		if k != "sign" { // 排除sign字段
-			keys = append(keys, k)
-		}
-	}
-
-	// 由于切片的元素顺序是不固定，所以这里强制给切片元素加个顺序
-	sort.Strings(keys)
-
-	//创建字符缓冲
-	var buf bytes.Buffer
-	for _, k := range keys {
-		if len(params[k]) > 0 {
-			buf.WriteString(k)
-			buf.WriteString(`=`)
-			buf.WriteString(params[k])
-			buf.WriteString(`&`)
-		}
-	}
-	// 加入apiKey作加密密钥
-	buf.WriteString(`key=`)
-	buf.WriteString(c.apiKey)
-
-	var (
-		dataMd5    [16]byte
-		dataSha256 []byte
-		str        string
-	)
-
-	switch c.signType {
-	case MD5:
-		dataMd5 = md5.Sum(buf.Bytes())
-		str = hex.EncodeToString(dataMd5[:]) //需转换成切片
-	case HMACSHA256:
-		h := hmac.New(sha256.New, []byte(c.apiKey))
-		h.Write(buf.Bytes())
-		dataSha256 = h.Sum(nil)
-		str = hex.EncodeToString(dataSha256[:])
-	}
-
-	return strings.ToUpper(str)
-}
+//// @description 微信支付签名，微信文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=4_3
+//// @param params 需要签名的参数
+//// @return 返回签名后的字符串
+//
+//func (c *Core) Sign(params map[string]string) string {
+//	// 创建切片
+//	var keys = make([]string, 0, len(params))
+//	// 遍历签名参数
+//	for k := range params {
+//		if k != "sign" { // 排除sign字段
+//			keys = append(keys, k)
+//		}
+//	}
+//
+//	// 由于切片的元素顺序是不固定，所以这里强制给切片元素加个顺序
+//	sort.Strings(keys)
+//
+//	//创建字符缓冲
+//	var buf bytes.Buffer
+//	for _, k := range keys {
+//		if len(params[k]) > 0 {
+//			buf.WriteString(k)
+//			buf.WriteString(`=`)
+//			buf.WriteString(params[k])
+//			buf.WriteString(`&`)
+//		}
+//	}
+//	// 加入apiKey作加密密钥
+//	buf.WriteString(`key=`)
+//	buf.WriteString(c.apiKey)
+//
+//	var (
+//		dataMd5    [16]byte
+//		dataSha256 []byte
+//		str        string
+//	)
+//
+//	switch c.signType {
+//	case MD5:
+//		dataMd5 = md5.Sum(buf.Bytes())
+//		str = hex.EncodeToString(dataMd5[:]) //需转换成切片
+//	case HMACSHA256:
+//		h := hmac.New(sha256.New, []byte(c.apiKey))
+//		h.Write(buf.Bytes())
+//		dataSha256 = h.Sum(nil)
+//		str = hex.EncodeToString(dataSha256[:])
+//	}
+//
+//	return strings.ToUpper(str)
+//}
 
 // 生成带有签名的xml字符串
 func (c *Core) GenerateSignedXML(params map[string]string) string {
-	sign := c.Sign(params)
+	sign := wxutils.Sign(params, c.apiKey, c.signType)
 	params[Sign] = sign
 	return wxutils.Map2XML(params)
 }
@@ -100,7 +95,7 @@ func (c *Core) GenerateSignedXML(params map[string]string) string {
 // post请求，without fillRequestData
 func (c *Core) PostWithoutFillRequestData(url string, params map[string]string) (string, error) {
 	h := &http.Client{}
-	params["sign"] = c.Sign(params)
+	params["sign"] = wxutils.Sign(params, c.apiKey, c.signType)
 	response, err := h.Post(url, "application/xml; charset=utf-8", strings.NewReader(wxutils.Map2XML(params)))
 	if err != nil {
 		return "", err
@@ -129,13 +124,13 @@ func (c *Core) PostWithoutCert(url string, params map[string]string) (string, er
 	return string(res), nil
 }
 
-// 验证签名
-func (c *Core) ValidSign(params map[string]string) bool {
-	if _, ok := params[Sign]; !ok {
-		return false
-	}
-	return params[Sign] == c.Sign(params)
-}
+//// 验证签名
+//func (c *Core) ValidSign(params map[string]string) bool {
+//	if _, ok := params[Sign]; !ok {
+//		return false
+//	}
+//	return params[Sign] == c.Sign(params)
+//}
 
 // 向 params 中添加 appid、mch_id、nonce_str、sign_type、sign
 func (c *Core) fillRequestData(params map[string]string) map[string]string {
@@ -143,7 +138,7 @@ func (c *Core) fillRequestData(params map[string]string) map[string]string {
 	params["mch_id"] = c.mchID
 	params["nonce_str"] = wxutils.NonceStr(8)
 	params["sign_type"] = c.signType
-	params["sign"] = c.Sign(params)
+	params["sign"] = wxutils.Sign(params, c.apiKey, c.signType)
 	return params
 }
 
@@ -163,7 +158,7 @@ func (c *Core) ProcessResponseXML(xmlStr string) (map[string]string, error) {
 	if returnCode == Fail {
 		return params, nil
 	} else if returnCode == Success {
-		if c.ValidSign(params) {
+		if wxutils.ValidSign(params, c.apiKey, Sign, c.signType) {
 			return params, nil
 		} else {
 			return nil, errors.New("invalid sign value in XML")
