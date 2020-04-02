@@ -188,9 +188,9 @@ func GetOpenID(c *gin.Context) {
 
 // 查询订单
 func Redirect(c *gin.Context) {
-	redirectURL := "http://pay.raccooncode.com/wechat-pay/wechat/pay/redirect"
-	redirectURL = url.QueryEscape(redirectURL)
-	wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURL + "&response_type=code&scope=SCOPE&state=STATE#wechat_redirect"
+	redirectTo := "http://pay.raccooncode.com/wechat-pay/wechat/pay/openid"
+	redirectTo = url.QueryEscape(redirectTo)
+	wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectTo + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
 
 	log.Printf("url is :%v", wxURL)
 	http.Redirect(c.Writer, c.Request, wxURL, http.StatusFound)
