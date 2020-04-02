@@ -68,3 +68,19 @@ func (p *Pay) Notify(xmlStr string) (map[string]string, error) {
 
 	return resp, nil
 }
+
+// 授权码查询OPENID接口
+
+func (p *Pay) AuthCodeToOpenid(params map[string]string) (map[string]string, error) {
+	var url string
+	if p.isSandbox {
+		url = core.SandboxAuthCodeToOpenidUrl
+	} else {
+		url = core.AuthCodeToOpenidUrl
+	}
+	xmlStr, err := p.cli.PostWithoutCert(url, params)
+	if err != nil {
+		return nil, err
+	}
+	return p.cli.ProcessResponseXML(xmlStr)
+}

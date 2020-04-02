@@ -86,6 +86,7 @@ func UninfedOrderJSAPI(c *gin.Context) {
 	params["spbill_create_ip"] = "192.168.0.1"
 	params["notify_url"] = WXNotifyUrl
 	params["trade_type"] = "JSAPI"
+	params["open_id"] = "JSAPI"
 
 	resp, err := payment.UnifiedOrder(params)
 	resp["out_trade_no"] = outTradeNo
@@ -155,5 +156,39 @@ func NotifyNative(c *gin.Context) {
 		"msg":  "Success",
 		"data": resp,
 	})
+
+}
+
+// 查询订单
+func GetOpenID(c *gin.Context) {
+	code := c.DefaultQuery("code", "")
+	log.Printf("code is:%v", code)
+	if code == "" {
+
+	}
+
+	h := &http.Client{}
+	response, err := h.Get("https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WXAppID + "&secret=" + WXAppSecret + "&code=" + code + "&grant_type=authorization_code")
+	if err != nil {
+
+	}
+	defer response.Body.Close()
+	res, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "Success",
+		"data": string(res),
+	})
+
+}
+
+// 查询订单
+func Redirect(c *gin.Context) {
+	rediretcURL := "http%3a%2f%2ffb58d265.ngrok.io%2fwechat%2fpay%2fopenid"
+	url := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + rediretcURL + "&response_type=code&scope=SCOPE&state=STATE#wechat_redirect"
+	http.Redirect(c.Writer, c.Request, url, http.StatusFound)
 
 }

@@ -15,16 +15,17 @@ const (
 	MD5        = "MD5"
 	Sign       = "sign"
 
-	MicroPayUrl                = "https://api.mch.weixin.qq.com/pay/micropay"
-	UnifiedOrderUrl            = "https://api.mch.weixin.qq.com/pay/unifiedorder"
-	OrderQueryUrl              = "https://api.mch.weixin.qq.com/pay/orderquery"
+	MicroPayUrl     = "https://api.mch.weixin.qq.com/pay/micropay"
+	UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder"
+	OrderQueryUrl   = "https://api.mch.weixin.qq.com/pay/orderquery"
 
-	SandboxUnifiedOrderUrl     = "https://api.mch.weixin.qq.com/sandboxnew/pay/unifiedorder"
-	SandboxOrderQueryUrl       = "https://api.mch.weixin.qq.com/sandboxnew/pay/orderquery"
+	AuthCodeToOpenidUrl = "https://api.mch.weixin.qq.com/tools/authcodetoopenid"
 
+	SandboxUnifiedOrderUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/unifiedorder"
+	SandboxOrderQueryUrl   = "https://api.mch.weixin.qq.com/sandboxnew/pay/orderquery"
 
-	SandboxGetSignKeyUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
-
+	SandboxGetSignKeyUrl       = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
+	SandboxAuthCodeToOpenidUrl = "https://api.mch.weixin.qq.com/sandboxnew/tools/authcodetoopenid"
 
 	AckSuccess = `<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>`
 	AckFail    = `<xml><return_code><![CDATA[FAIL]]></return_code></xml>`
