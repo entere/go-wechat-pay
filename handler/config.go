@@ -20,27 +20,20 @@ var (
 	WXNotifyUrl string
 )
 
-
 func Init() {
+	WXAppID = "xxx"
+	WXAppSecret = "xxx"
+	WXMchID = "xxx"
+	WXApiKey = "xxx"
 
-	WXAppID     = "xx"
-	WXAppSecret = "xx"
-	WXMchID     = "xx"
-	WXApiKey    = "xx"
-
-
-
-
-	//todo 不用沙箱  换成配置文件
+	//todo  换成配置文件
 	if !WXIsSandbox {
 		WXTotalFree = 1
-		WXNotifyUrl = "http://api.raccooncode.com/go-wechat-pay/wechat/pay/notify"
+		WXNotifyUrl = "http://pay.raccooncode.com/wechat-pay/wechat/pay/notify/native"
 	} else {
-		WXApiKey    = GetSandboxApiKey(WXAppID,WXMchID,WXApiKey)
+		WXApiKey = GetSandboxApiKey(WXAppID, WXMchID, WXApiKey)
 		WXTotalFree = 301
-		WXNotifyUrl = "http://6daf869b.ngrok.io/wechat/pay/notify"
+		WXNotifyUrl = "http://fb58d265.ngrok.io/wechat/pay/notify/native"
 	}
 
-
 }
-
