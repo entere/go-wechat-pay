@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 
@@ -187,8 +188,11 @@ func GetOpenID(c *gin.Context) {
 
 // 查询订单
 func Redirect(c *gin.Context) {
-	rediretcURL := "http%3a%2f%2ffb58d265.ngrok.io%2fwechat%2fpay%2fopenid"
-	url := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + rediretcURL + "&response_type=code&scope=SCOPE&state=STATE#wechat_redirect"
-	http.Redirect(c.Writer, c.Request, url, http.StatusFound)
+	redirectURL := "http://pay.raccooncode.com/wechat-pay/wechat/pay/redirect"
+	redirectURL = url.QueryEscape(redirectURL)
+	wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURL + "&response_type=code&scope=SCOPE&state=STATE#wechat_redirect"
+
+	log.Printf("url is :%v", wxURL)
+	http.Redirect(c.Writer, c.Request, wxURL, http.StatusFound)
 
 }
