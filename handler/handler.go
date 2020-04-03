@@ -79,7 +79,7 @@ func UninfedOrderJSAPI(c *gin.Context) {
 	//}
 	openid := c.PostForm("openid")
 	outTradeNo := wxutils.TimeToString(time.Now())
-	log.Printf("unified order out trade no :%v\n", outTradeNo)
+	fmt.Printf("unified order out trade no :%v\n", outTradeNo)
 
 	params := make(map[string]string)
 	params["body"] = "test"
@@ -89,6 +89,8 @@ func UninfedOrderJSAPI(c *gin.Context) {
 	params["notify_url"] = WXNotifyUrl
 	params["trade_type"] = "JSAPI"
 	params["open_id"] = openid
+
+	fmt.Printf("unified order out trade no :%v\n", params)
 
 	resp, err := payment.UnifiedOrder(params)
 	resp["out_trade_no"] = outTradeNo
