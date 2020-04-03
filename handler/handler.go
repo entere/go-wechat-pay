@@ -77,6 +77,7 @@ func UninfedOrderJSAPI(c *gin.Context) {
 	//if err != nil {
 	//	fmt.Printf("get sand box sign key err:%v\n", err)
 	//}
+	openid := c.PostForm("openid")
 	outTradeNo := wxutils.TimeToString(time.Now())
 	log.Printf("unified order out trade no :%v\n", outTradeNo)
 
@@ -87,7 +88,7 @@ func UninfedOrderJSAPI(c *gin.Context) {
 	params["spbill_create_ip"] = "192.168.0.1"
 	params["notify_url"] = WXNotifyUrl
 	params["trade_type"] = "JSAPI"
-	params["open_id"] = "JSAPI"
+	params["open_id"] = openid
 
 	resp, err := payment.UnifiedOrder(params)
 	resp["out_trade_no"] = outTradeNo
@@ -189,4 +190,16 @@ func GetOpenID(c *gin.Context) {
 		"data": string(res),
 	})
 
+}
+
+func GetParams(c *gin.Context) {
+
+	code := c.PostForm("code")
+
+	fmt.Printf("aaa: %v", code)
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "Success",
+		"data": string(code),
+	})
 }

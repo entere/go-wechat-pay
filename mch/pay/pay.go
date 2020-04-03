@@ -9,9 +9,8 @@
 package pay
 
 import (
-	"log"
-
 	"github.com/entere/go-wechat-pay/mch/core"
+	"log"
 )
 
 type Pay struct {
@@ -84,3 +83,5 @@ func (p *Pay) AuthCodeToOpenid(params map[string]string) (map[string]string, err
 	}
 	return p.cli.ProcessResponseXML(xmlStr)
 }
+
+//

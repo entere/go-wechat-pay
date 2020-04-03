@@ -18,6 +18,11 @@
 <body>
 <button onclick="wapWxPay()" class="pay1">点击</button>
 <script>
+    var openid = "";
+    $(document).ready(function(){
+        getOpenid()
+        
+    });
     // var params = {
     //     uid: uid,
     //     type: pid,
@@ -28,6 +33,28 @@
     //     tradeType: 'JSAPI'
     // };
     //微信wap支付
+
+    function getOpenid() {
+        $.ajax({
+            url:"/wechat-pay/wechat/pay/openid",
+            // url:"/wechat/pay/openid",
+            type: "get",
+            // data: 'params',
+            data: "",
+            async: false,
+            dataType: "json",
+            success: function(result) {
+                console.log(result)
+                if(result.code=200) {
+                    openid = result.data.openid
+                }
+            }
+        })
+    }
+
+
+
+
     function wapWxPay(param) {
         $.ajax({
 
@@ -36,7 +63,7 @@
 
             type: "post",
             // data: 'params',
-            data: '',
+            data: {openid:openid},
             dataType: "json",
             success: function(result) {
                 if(result.code=200) {

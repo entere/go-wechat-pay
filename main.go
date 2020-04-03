@@ -35,5 +35,8 @@ func main() {
 
 	r.GET("/wechat/pay/openid", handler.GetOpenID)
 
+	//test
+	r.POST("/wechat/pay/getparams", handler.GetParams)
+
 	r.Run(":8003") // 监听并在 0.0.0.0:8080 上启动服务
 }
