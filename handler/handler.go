@@ -189,7 +189,7 @@ func GetOpenID(c *gin.Context) {
 	defer response.Body.Close()
 	res, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-
+		fmt.Printf("get openid err:%v", err)
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
