@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/entere/go-wechat-pay/mch/core"
@@ -166,7 +167,14 @@ func GetOpenID(c *gin.Context) {
 	code := c.DefaultQuery("code", "")
 
 	if code == "" {
-		redirectURI := "http://pay.raccooncode.com/wechat-pay/wechat/pay/openid"
+		scheme := "http://"
+		if c.Request.TLS != nil {
+			scheme = "https://"
+		}
+		//当前URL
+		redirectURI := strings.Join([]string{scheme, c.Request.Host, c.Request.RequestURI}, "")
+		fmt.Println("url is:", redirectURI)
+		// redirectURI := "http://pay.raccooncode.com/wechat-pay/wechat/pay/openid"
 		redirectURI = url.QueryEscape(redirectURI)
 		wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
 
