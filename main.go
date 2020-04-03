@@ -32,9 +32,8 @@ func main() {
 
 	//微信支付查询方法
 	r.POST("/wechat/pay/orderquery", handler.OrderQuery)
-	r.GET("/wechat/pay/redirect", handler.Redirect)
+
 	r.GET("/wechat/pay/openid", handler.GetOpenID)
-	r.GET("/wechat/pay/tt", handler.Tt)
 
 	r.Run(":8003") // 监听并在 0.0.0.0:8080 上启动服务
 }

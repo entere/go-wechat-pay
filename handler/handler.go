@@ -160,13 +160,18 @@ func NotifyNative(c *gin.Context) {
 
 }
 
-// 查询订单
+// 获取openid
 func GetOpenID(c *gin.Context) {
 	code := c.DefaultQuery("code", "")
-	log.Printf("code is:%v", code)
-	if code == "" {
 
+	if code == "" {
+		redirectURI := "http://pay.raccooncode.com/wechat-pay/wechat/pay/openid"
+		redirectURI = url.QueryEscape(redirectURI)
+		wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
+
+		c.Redirect(http.StatusFound, wxURL)
 	}
+	log.Printf("code is:%v", code)
 
 	h := &http.Client{}
 	response, err := h.Get("https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WXAppID + "&secret=" + WXAppSecret + "&code=" + code + "&grant_type=authorization_code")
@@ -184,34 +189,4 @@ func GetOpenID(c *gin.Context) {
 		"data": string(res),
 	})
 
-}
-
-// 查询订单
-func Redirect(c *gin.Context) {
-	redirectTo := "http://pay.raccooncode.com/wechat-pay/wechat/pay/openid"
-	redirectTo = url.QueryEscape(redirectTo)
-	wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectTo + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
-
-	log.Printf("url is :%v", wxURL)
-	http.Redirect(c.Writer, c.Request, wxURL, http.StatusFound)
-
-}
-
-func Tt(c *gin.Context) {
-
-	h := &http.Client{}
-	response, err := h.Get("http://pay.raccooncode.com/wechat-pay/wechat/pay/redirect")
-	if err != nil {
-
-	}
-	defer response.Body.Close()
-	res, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
-		"msg":  "Success",
-		"data": string(res),
-	})
 }
