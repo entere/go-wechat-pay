@@ -38,12 +38,13 @@
         $.ajax({
             url:"/wechat-pay/wechat/pay/openid",
             // url:"/wechat/pay/openid",
-            type: "get",
+            type: "GET",
             // data: 'params',
             data: "",
             async: false,
             dataType: "json",
             success: function(result) {
+                alert(result.data.openid)
                 console.log(result)
                 if(result.code=200) {
                     openid = result.data.openid
