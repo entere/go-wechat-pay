@@ -162,19 +162,11 @@ func NotifyNative(c *gin.Context) {
 
 }
 
-// 获取openid
-func GetOpenID(c *gin.Context) {
+// 跳转获取openid
+func LoginCallback(c *gin.Context) {
 	code := c.DefaultQuery("code", "")
-
 	if code == "" {
-		//scheme := "http://"
-		//if c.Request.TLS != nil {
-		//	scheme = "https://"
-		//}
-		//当前URL
-		// redirectURI := strings.Join([]string{scheme, c.Request.Host, c.Request.RequestURI}, "")
-		// fmt.Println("url is:", redirectURI)
-		redirectURI := "http://pay.raccooncode.com/weixin/pay/openid"
+		redirectURI := "http://pay.raccooncode.com/weixin/login/mp/callback"
 		redirectURI = url.QueryEscape(redirectURI)
 		wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
 
@@ -185,12 +177,12 @@ func GetOpenID(c *gin.Context) {
 	h := &http.Client{}
 	response, err := h.Get("https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WXAppID + "&secret=" + WXAppSecret + "&code=" + code + "&grant_type=authorization_code")
 	if err != nil {
-
+		fmt.Errorf("get openid err:%v", err)
 	}
 	defer response.Body.Close()
 	res, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Printf("get openid err:%v", err)
+		fmt.Printf("get openid ioutil read err:%v", err)
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,

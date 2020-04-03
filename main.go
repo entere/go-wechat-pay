@@ -32,8 +32,8 @@ func main() {
 
 	// JSAPI支付统一下单
 	r.POST("/pay/unifiedorder/jsapi", handler.UninfedOrderJSAPI)
-	// JSAPI支付获取openid
-	r.GET("/pay/openid", handler.GetOpenID)
+	// JSAPI支付需要openid，通过跳转获取
+	r.GET("/login/mp/callback", handler.LoginCallback)
 
 	//微信支付查询方法
 
