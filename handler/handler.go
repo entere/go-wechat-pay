@@ -174,7 +174,7 @@ func GetOpenID(c *gin.Context) {
 		//当前URL
 		// redirectURI := strings.Join([]string{scheme, c.Request.Host, c.Request.RequestURI}, "")
 		// fmt.Println("url is:", redirectURI)
-		redirectURI := "http://pay.raccooncode.com/wechat-pay/wechat/pay/openid"
+		redirectURI := "http://pay.raccooncode.com/weixin/pay/openid"
 		redirectURI = url.QueryEscape(redirectURI)
 		wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
 

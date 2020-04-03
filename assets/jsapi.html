@@ -36,8 +36,8 @@
 
     function getOpenid() {
         $.ajax({
-            url:"/wechat-pay/wechat/pay/openid",
-            // url:"/wechat/pay/openid",
+            url:"/weixin/pay/openid",
+            // url:"/pay/openid",
             type: "GET",
             // data: 'params',
             data: "",
@@ -59,8 +59,8 @@
     function wapWxPay(param) {
         $.ajax({
 
-            url:"/wechat-pay/wechat/pay/unifiedorder/jsapi",
-            //url: "/wechat/pay/unifiedorder/jsapi",
+            url:"/weixin/pay/unifiedorder/jsapi",
+            //url: "/pay/unifiedorder/jsapi",
 
             type: "post",
             // data: 'params',
