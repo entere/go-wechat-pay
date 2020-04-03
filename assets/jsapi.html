@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>paywechat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <style>
@@ -17,6 +18,8 @@
 </head>
 <body>
 <button onclick="wapWxPay()" class="pay1">点击</button>
+
+<button onclick="getOpenid()" >openid</button>
 <script>
     var openid = "";
     $(document).ready(function(){
@@ -36,7 +39,7 @@
 
     function getOpenid() {
         $.ajax({
-            url:"/weixin/pay/openid",
+            url:"/weixin/login/mp/callback",
             // url:"/pay/openid",
             type: "GET",
             // data: 'params',
