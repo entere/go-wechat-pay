@@ -24,14 +24,14 @@ func main() {
 	})
 
 	// Native扫码支付统一单
-	r.POST("/pay/unifiedorder/native", handler.UninfedOrderNative)
+	r.POST("/pay/wxnPay", handler.UninfedOrderNative)
 	// Native扫码支付成功通知
 	r.POST("/pay/notify/native", handler.NotifyNative)
 	// Native扫码支付查询订单
 	r.POST("/pay/orderquery", handler.OrderQuery)
 
 	// JSAPI支付统一下单
-	r.POST("/pay/unifiedorder/jsapi", handler.UninfedOrderJSAPI)
+	r.POST("/pay/wxjPay", handler.UninfedOrderJSAPI)
 	// JSAPI支付需要openid，通过跳转获取
 	r.GET("/login/mp/callback", handler.LoginCallback)
 

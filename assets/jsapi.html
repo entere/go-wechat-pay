@@ -6,18 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-    <style>
-        .pay1{
-            width: 200px;
-            height: 100px;
-            position: fixed;
-            left: 45%;
-            top: 40%;
-        }
-    </style>
+
 </head>
 <body>
-<button onclick="wapWxPay()" class="pay1">点击</button>
+<button onclick="wapWxPay()" >点 击</button>
 
 <button onclick="getOpenid()" >openid</button>
 <script>
@@ -61,8 +53,8 @@
     function wapWxPay(param) {
         $.ajax({
 
-            url:"/weixin/pay/unifiedorder/jsapi",
-            //url: "/pay/unifiedorder/jsapi",
+            url:"/weixin/pay/wxjPay",
+            //url: "/pay/wxjPay",
 
             type: "post",
             // data: 'params',
