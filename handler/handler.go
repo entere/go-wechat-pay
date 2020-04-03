@@ -9,6 +9,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/entere/go-wechat-pay/mch/wxutils"
 	"io/ioutil"
@@ -71,6 +72,8 @@ func UninfedOrderNative(c *gin.Context) {
 
 // JsAPI统一下单接口
 func UninfedOrderJSAPI(c *gin.Context) {
+
+	LoginCallback(c)
 
 	//// 获取沙箱api_key
 	//sandboxApiKey, err := payment.GetSandboxSignKey(payment.WX_MCH_ID, payment.WX_API_KEY)
@@ -181,6 +184,14 @@ func LoginCallback(c *gin.Context) {
 	}
 	defer response.Body.Close()
 	res, err := ioutil.ReadAll(response.Body)
+
+	var mapResult map[string]interface{}
+	err = json.Unmarshal(res, &mapResult)
+	if err != nil {
+		fmt.Println("JsonToMapDemo err: ", err)
+	}
+	fmt.Println(mapResult)
+
 	if err != nil {
 		fmt.Printf("get openid ioutil read err:%v", err)
 	}
