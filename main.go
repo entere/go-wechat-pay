@@ -16,7 +16,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	r.Static("/assets", "./assets")
+	r.Static("/activity", "./activity")
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
