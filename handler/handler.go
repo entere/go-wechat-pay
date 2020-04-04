@@ -170,7 +170,7 @@ func LoginCallback(c *gin.Context) {
 	if code == "" {
 		redirectURI := "http://pay.raccooncode.com/weixin/login/mp/callback"
 		redirectURI = url.QueryEscape(redirectURI)
-		wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
+		wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect"
 
 		c.Redirect(http.StatusFound, wxURL)
 	}
