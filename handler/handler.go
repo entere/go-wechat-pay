@@ -79,7 +79,6 @@ func UninfedOrderJSAPI(c *gin.Context) {
 	//	fmt.Printf("get sand box sign key err:%v\n", err)
 	//}
 	openid := c.PostForm("openid")
-	openid = GetOpenID(c)
 	fmt.Printf("openid is aaa:%v\n", openid)
 	outTradeNo := wxutils.TimeToString(time.Now())
 
@@ -200,41 +199,6 @@ func LoginCallback(c *gin.Context) {
 		"msg":  "Success",
 		"data": string(res),
 	})
-
-}
-
-func GetOpenID(c *gin.Context) string {
-	code := c.DefaultQuery("code", "")
-	if code == "" {
-		redirectURI := "http://pay.raccooncode.com/weixin/login/mp/callback"
-		redirectURI = url.QueryEscape(redirectURI)
-		wxURL := "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
-
-		c.Redirect(http.StatusFound, wxURL)
-	}
-	log.Printf("code is:%v", code)
-
-	h := &http.Client{}
-	response, err := h.Get("https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WXAppID + "&secret=" + WXAppSecret + "&code=" + code + "&grant_type=authorization_code")
-	if err != nil {
-		fmt.Errorf("get openid err:%v", err)
-	}
-	defer response.Body.Close()
-	res, err := ioutil.ReadAll(response.Body)
-
-	var mapResult map[string]interface{}
-	err = json.Unmarshal(res, &mapResult)
-	if err != nil {
-		fmt.Println("JsonToMapDemo err: ", err)
-	}
-
-	fmt.Println(mapResult)
-
-	if err != nil {
-		fmt.Printf("get openid ioutil read err:%v", err)
-	}
-
-	return mapResult["openid"].(string)
 
 }
 
