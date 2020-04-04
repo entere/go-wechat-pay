@@ -9,12 +9,9 @@
 
     <script>
 
-
-
-            var openid
             $(document).ready(function(){
-                openid = getOpenid(getCode())
-                console.log(openid)
+                getOpenid(getCode())
+
             });
 
             //微信wap支付
@@ -39,7 +36,7 @@
             }
 
             function getOpenid(code) {
-                var openID = "";
+
                 $.ajax({
                     url:"/weixin/login/mp/openid?code="+code,
                     // url:"/pay/openid",
@@ -51,14 +48,15 @@
                     success: function(result) {
                         console.log(result)
                         if(result.code=200) {
-                            openID = result.data.openid
-                            return openID
+                            window.localStorage.setItem("openid",result.data.openid)
+
                         }
                     }
                 })
             }
 
             function wapWxPay() {
+                openid = window.localStorage.getItem("openid")
                 $.ajax({
 
                     url:"/weixin/pay/wxjPay",
