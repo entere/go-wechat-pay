@@ -55,7 +55,6 @@
 
             function wapWxPay() {
                 openid = window.localStorage.getItem("openid")
-                window.localStorage.removeItem("openid");
                 $.ajax({
 
                     url:"/weixin/pay/wxjPay",
