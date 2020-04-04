@@ -39,7 +39,7 @@ func main() {
 	//微信支付查询方法
 
 	//test
-	r.POST("/pay/getparams", handler.GetParams)
+	r.GET("/pay/getparams", handler.GetParams)
 
 	r.Run(":8003") // 监听并在 0.0.0.0:8080 上启动服务
 }

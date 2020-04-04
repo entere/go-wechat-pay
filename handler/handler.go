@@ -213,7 +213,7 @@ func GetOpenidByCode(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
 		"msg":  "Success",
-		"data": string(res),
+		"data": res,
 	})
 
 }
@@ -221,11 +221,15 @@ func GetOpenidByCode(c *gin.Context) {
 func GetParams(c *gin.Context) {
 
 	code := c.PostForm("code")
-
+	str := `{"access_token":"32_K9xQ7qayzaPYS35BlvShKXqakwpweI…xE1MW7KjnHGJklMNZ5qYRQrpU","scope":"snsapi_base"}`
+	var ret map[string]interface{}
+	if err := json.Unmarshal([]byte(str), &ret); err != nil {
+		fmt.Errorf("oooooo:%v", ret)
+	}
 	fmt.Printf("aaa: %v", code)
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
 		"msg":  "Success",
-		"data": string(code),
+		"data": ret,
 	})
 }

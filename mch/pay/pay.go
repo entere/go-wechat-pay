@@ -9,6 +9,7 @@
 package pay
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/entere/go-wechat-pay/mch/core"
 	"io/ioutil"
@@ -87,29 +88,24 @@ func (p *Pay) AuthCodeToOpenid(params map[string]string) (map[string]string, err
 	return p.cli.ProcessResponseXML(xmlStr)
 }
 
-func (p *Pay) GetOpenidByCode(code string, appID string, appSecret string) ([]byte, error) {
+func (p *Pay) GetOpenidByCode(code string, appID string, appSecret string) (map[string]interface{}, error) {
 	var url string
 	url = core.OpenidByCodeUrl
 	h := &http.Client{}
 	response, err := h.Get(url + "?appid=" + appID + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code")
 	if err != nil {
+		fmt.Printf("get openid err:%v", err)
 		return nil, err
-		fmt.Errorf("get openid err:%v", err)
+
 	}
 	defer response.Body.Close()
 	res, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
-
-	//var ret map[string]interface{}
-	//err = json.Unmarshal(res, &ret)
-	//if err != nil {
-	//	return nil,err
-	//
-	//}
-	return res, nil
-
+	var ret map[string]interface{}
+	if err := json.Unmarshal(res, &ret); err != nil {
+		return nil, err
+	}
+	return ret, nil
 }
-
-//
