@@ -1,0 +1,195 @@
+<html lang="en" style="font-size: 60px;">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>幻想编程岛</title>
+    <link rel="stylesheet" type="text/css" href="css/landing.css" />
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+
+    <script>
+
+        $(document).ready(function(){
+            getOpenid(getCode())
+
+            $(".bottom-button").click(function(){
+                wapWxPay()
+            });
+        });
+        //微信wap支付
+
+        function getCode() {
+            var code = GetQueryValue("code")
+            if(code == "") {
+                WXAppID = "wx70376c954b87ab14";
+                // redirectURI = "http://pay.raccooncode.com/weixin/login/mp/callback";
+                redirectURI = "http://pay.raccooncode.com/weixin/activity/goods.html";
+                redirectURI = encodeURI(redirectURI);
+                wxURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+
+                window.location.href=wxURL;
+                code = GetQueryValue("code")
+                return code
+            }
+
+            return code
+
+
+        }
+
+        function getOpenid(code) {
+
+            $.ajax({
+                url:"/weixin/login/mp/openid?code="+code,
+                // url:"/pay/openid",
+                type: "GET",
+                // data: 'params',
+                data: {code:code},
+                async: false,
+                dataType: "json",
+                success: function(result) {
+                    console.log(result)
+                    if(result.code=200) {
+                        window.localStorage.setItem("openid",result.data.openid)
+
+                    }
+                }
+            })
+        }
+
+        function wapWxPay() {
+            openid = window.localStorage.getItem("openid")
+            $.ajax({
+
+                url:"/weixin/pay/wxjPay",
+                //url: "/pay/wxjPay",
+
+                type: "post",
+                // data: 'params',
+                data: {openid:openid},
+                dataType: "json",
+                success: function(result) {
+                    if(result.code=200) {
+                        console.log(result.data.appId, result.data.timeStamp, result.data.nonceStr, result.data.package, result.data.signType, result.data.paySign)
+
+                        callPay(result.data.appId, result.data.timeStamp, result.data.nonceStr, result.data.package, result.data.signType, result.data.paySign); // 通过接口传递package信息
+                        // callPay("wx2421b1c4370ec43b","1395712654","e61463f8efa94090b1f366cccfbbb444","prepay_id=u802345jgfjsdfgsdg888","70EA570631E4BB79628FBCA90534C63FF7FADD89");
+                    }
+                }
+            })
+            // callPay("wx2421b1c4370ec43b","1395712654","e61463f8efa94090b1f366cccfbbb444","prepay_id=u802345jgfjsdfgsdg888","70EA570631E4BB79628FBCA90534C63FF7FADD89");
+        }
+        function callPay(appId, timeStamp, nonceStr, packageValue, signType, paySign) {
+            if(typeof WeixinJSBridge == "undefined") {
+                if(document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                } else if(document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                }
+            } else {
+                onBridgeReady(appId, timeStamp, nonceStr, packageValue, signType, paySign);
+            }
+        }
+        function onBridgeReady(appId, timeStamp, nonceStr, packageValue, signType, paySign) {
+            WeixinJSBridge.invoke(
+                'getBrandWCPayRequest', {
+                    "appId": appId, //公众号名称，由商户传入
+                    "timeStamp": timeStamp, //时间戳，自1970年以来的秒数
+                    "nonceStr": nonceStr, //随机串
+                    "package": packageValue,
+                    "signType": signType, //"MD5", //微信签名方式:
+                    "paySign": paySign //微信签名
+                },
+                function(res) {
+                    if(res.err_msg == 'get_brand_wcpay_request:ok') { //支付成功
+                        alert("支付成功");
+                    } else if(res.err_msg == 'get_brand_wcpay_request:cancel') { //支付取消
+                        alert("支付取消");
+                    } else { //支付失败
+                        alert("支付失败");
+                    }
+                });
+        }
+
+
+
+        /**
+         * [通过参数名获取url中的参数值]
+         * 示例URL:
+         * @param  {[string]} queryName [参数名]
+         * @return {[string]}           [参数值]
+         */
+        function GetQueryValue(queryName) {
+            var query = decodeURI(window.location.search.substring(1));
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == queryName) { return pair[1]; }
+            }
+            return "";
+        }
+
+
+
+
+    </script>
+
+</head>
+<body>
+<noscript>
+    <strong>您的浏览器不支持或禁用了JavaScript，请手动打开后重新进入.</strong>
+</noscript>
+<div id="app">
+    <div  class="ladning-wrap">
+        <img src="images/activity-1-header-1.jpg" class="img-banner" />
+        <div  class="course-wrap">
+            <div  class="course-info">
+                <img  src="https://img.hetao101.com/assets/miniprogram/landingpage/commodity/icon-gift-course.png" class="course-icon" />
+                <div  class="course-price">
+                    &yen; 9.9
+                </div>
+                <div  class="course-origin-price">
+                    <span >￥</span>
+                    <span  style="letter-spacing: 2px;">199</span>
+                </div>
+                <!---->
+            </div>
+            <div  class="course-name">
+                10节Python编程网课+25关编程游戏
+            </div>
+        </div>
+
+
+        <div  class="section-wrap">
+            <img  src="./images/activity-1-image-1.png" class="section-img" />
+
+
+        </div>
+        <div  class="bottom-wrap">
+            <div  class="bottom-price">
+                <span  style="margin: auto 4px 0px 0px; font-size: 0.28rem;">&yen;</span>
+                <span >9.9</span>
+            </div>
+            <div  class="bottom-info">
+                <div  class="bottom-info-amount">
+                    原价199
+                </div>
+                <div  class="bottom-info-tips">
+                    邀请亲友送&yen;15奖学金
+                </div>
+            </div>
+            <div  class="bottom-button">
+                立即购买
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>
