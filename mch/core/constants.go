@@ -15,10 +15,10 @@ const (
 	MD5        = "MD5"
 	Sign       = "sign"
 
-	MicroPayUrl     = "https://api.mch.weixin.qq.com/pay/micropay"
-	UnifiedOrderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder"
-	OrderQueryUrl   = "https://api.mch.weixin.qq.com/pay/orderquery"
-
+	MicroPayUrl         = "https://api.mch.weixin.qq.com/pay/micropay"
+	UnifiedOrderUrl     = "https://api.mch.weixin.qq.com/pay/unifiedorder"
+	OrderQueryUrl       = "https://api.mch.weixin.qq.com/pay/orderquery"
+	OpenidByCodeUrl     = "https://api.weixin.qq.com/sns/oauth2/access_token"
 	AuthCodeToOpenidUrl = "https://api.mch.weixin.qq.com/tools/authcodetoopenid"
 
 	SandboxUnifiedOrderUrl = "https://api.mch.weixin.qq.com/sandboxnew/pay/unifiedorder"

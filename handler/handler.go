@@ -202,6 +202,22 @@ func LoginCallback(c *gin.Context) {
 
 }
 
+// 跳转获取openid
+func GetOpenidByCode(c *gin.Context) {
+	code := c.DefaultQuery("code", "")
+	log.Printf("code is:%v", code)
+	res, err := payment.GetOpenidByCode(code, WXAppID, WXAppSecret)
+	if err != nil {
+		fmt.Printf("get openid err:%v", err)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "Success",
+		"data": string(res),
+	})
+
+}
+
 func GetParams(c *gin.Context) {
 
 	code := c.PostForm("code")

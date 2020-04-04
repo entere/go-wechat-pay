@@ -34,6 +34,7 @@ func main() {
 	r.POST("/pay/wxjPay", handler.UninfedOrderJSAPI)
 	// JSAPI支付需要openid，通过跳转获取
 	r.GET("/login/mp/callback", handler.LoginCallback)
+	r.GET("/login/mp/openid", handler.GetOpenidByCode)
 
 	//微信支付查询方法
 
