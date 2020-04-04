@@ -14,18 +14,8 @@
 <button onclick="getOpenid()" >openid</button>
 <script>
     $(function(){
-        var code = GetQueryValue("code")
-        if(code == "") {
-            WXAppID = "wx70376c954b87ab14";
-            // redirectURI = "http://pay.raccooncode.com/weixin/login/mp/callback";
-            redirectURI = "http://pay.raccooncode.com/weixin/activity/jsapi.html";
-            redirectURI = encodeURI(redirectURI);
-            wxURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
-
-            window.location.href=wxURL;
-            code = GetQueryValue("code")
-        }
-
+        var code;
+        code = getCode()
         console.log(code)
     });
 
@@ -43,6 +33,25 @@
     //     tradeType: 'JSAPI'
     // };
     //微信wap支付
+
+    function getCode() {
+        var code = GetQueryValue("code")
+        if(code == "") {
+            WXAppID = "wx70376c954b87ab14";
+            // redirectURI = "http://pay.raccooncode.com/weixin/login/mp/callback";
+            redirectURI = "http://pay.raccooncode.com/weixin/activity/jsapi.html";
+            redirectURI = encodeURI(redirectURI);
+            wxURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WXAppID + "&redirect_uri=" + redirectURI + "&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+
+            window.location.href=wxURL;
+            code = GetQueryValue("code")
+            return code
+        }
+        console.log(code)
+        return code
+
+
+    }
 
     function getOpenid() {
         $.ajax({
